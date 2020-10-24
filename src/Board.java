@@ -71,11 +71,48 @@ public class Board {
     public String firstPlayerMessage(){
         return "Black player turn";
     }
-    public String SecondPlayerMessage(){
+    public String secondPlayerMessage(){
         return "White player turn";
+    }
+    public int rightSearch(int k,int m,String player){
+        int count=0;
+        if(player=="First"){
+            for(int i=k+1;i<9;i++){
+                if(board[i][m]=="W"){
+                    count++;
+                }
+                if(board[i][m]=="B"){
+                    break;
+                }
+
+                if(board[i][m]=="-"){
+                    count=0;
+                    break;
+
+                }
+
+
+            }
+            if(count!=0){
+                for(int i=k;i<k+count+1;i++){
+                    board[m][i]="B";
+                }
+            }
+
+           this.print();
+
+
+
+
+
+        }
+        return count;
+
     }
     public void play()
     {
+        String fPart="";
+        String sPart="";
         boolean invalidInput=true;
         boolean invalidMove=true;
         do{
@@ -165,6 +202,8 @@ public class Board {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                    sPart=secondPart;
+                    fPart=firstPart;
                 } else {
                     invalidInput = true;
                     System.out.println("Invalid input");
@@ -179,6 +218,53 @@ public class Board {
 
             if(!invalidInput)
             {
+                boolean topRightCorner=false;
+                boolean topLeftCorner=false;
+                boolean bottomRightCorner=false;
+                boolean bottomLeftCorner=false;
+                boolean leftBorder=false;
+                boolean rightBorder=false;
+                boolean topBorder=false;
+                boolean bottomBorder=false;
+                int i=-1;
+                int j=Integer.parseInt(sPart);
+                switch (fPart)
+                {
+                    case"A":
+                    i=1;
+                    break;
+                    case"B":
+                        i=2;
+                        break;
+                    case"C":
+                        i=3;
+                        break;
+                    case"D":
+                        i=4;
+                        break;
+                    case"E":
+                        i=5;
+                        break;
+                    case"F":
+                        i=6;
+                        break;
+                    case"G":
+                        i=7;
+                        break;
+                    case"H":
+                        i=8;
+                        break;
+                }
+                System.out.printf(i+" "+j);
+                System.out.println();
+
+                this.rightSearch(i,j,"First");
+                invalidMove=false;
+
+
+
+
+
 
 
             }
@@ -193,9 +279,6 @@ public class Board {
 
 
     }
-
-
-
 
 
     public static void main(String args[]){
