@@ -13,11 +13,9 @@ public class Board {
          }
             System.out.println(" ");
         }
-
-
     }
-
-    public Board() {
+    public Board()
+    {
         for (int i = 0; i < 9; i++) {
             if (i == 0) {
                 board[i][0] = "#";
@@ -64,47 +62,267 @@ public class Board {
         }
         board[4][4]="B";
         board[4][5]="W";
-        board[5][4]="w";
+        board[5][4]="W";
         board[5][5]="B";
 
+
+
+
     }
-    public String firstPlayerMessage(){
+    public String firstPlayerMessage()
+    {
         return "Black player turn";
     }
-    public String secondPlayerMessage(){
+    public String secondPlayerMessage()
+    {
         return "White player turn";
     }
-    public int rightSearch(int k,int m,String player){
+    public int rightSearch(int k,int m,String player)
+    {
         int count=0;
         if(player=="First"){
-            for(int i=k+1;i<9;i++){
-                if(board[i][m]=="W"){
-                    count++;
+            if(board[k][m]=="-") {
+                for (int i = m + 1; i < 9; i++) {
+                    if (board[k][i] == "W") {
+                        count++;
+                    }
+                    if (board[k][i] == "B") {
+                        break;
+                    }
+
+                    if (board[k][i] == "-") {
+                        count = 0;
+                        break;
+                    }
                 }
-                if(board[i][m]=="B"){
-                    break;
+                if (count != 0) {
+                    for (int i = m; i < m + count+1 ; i++) {
+                        board[k][i] = "B";
+                    }
                 }
-
-                if(board[i][m]=="-"){
-                    count=0;
-                    break;
-
-                }
-
-
             }
-            if(count!=0){
-                for(int i=k;i<k+count+1;i++){
-                    board[m][i]="B";
-                }
-            }
-
            this.print();
+        }else if(player=="Second"){
+            if(board[k][m]=="-") {
+                for (int i = m + 1; i < 9; i++) {
+                    if (board[k][i] == "B") {
+                        count++;
+                    }
+                    if (board[k][i] == "W") {
+                        break;
+                    }
+                    if (board[k][i] == "-") {
+                        count = 0;
+                        break;
+                    }
+                }
+                if (count != 0) {
+                    for (int i = m; i < m + count+1 ; i++) {
+                        board[k][i] = "W";
+                    }
+                }
+            }
+            this.print();
+        }
+        return count;
 
+    }
+    public int leftSearch(int k,int m,String player)
+    {
+        int count=0;
+        if(player=="First"){
+            if(board[k][m]=="-") {
+                for (int i = m - 1; i >0 ; i--) {
+                    if (board[k][i] == "W") {
+                        count++;
+                    }
+                    if (board[k][i] == "B") {
+                        break;
+                    }
 
+                    if (board[k][i] == "-") {
+                        count = 0;
+                        break;
+                    }
+                }
+                if (count != 0) {
+                    for (int i = m; i > m - count-1 ; i--) {
+                        board[k][i] = "B";
+                    }
+                }
+            }
+            this.print();
+        }else if(player=="Second"){
+            if(board[k][m]=="-") {
+                for (int i = m - 1; i >0; i--) {
+                    if (board[k][i] == "B") {
+                        count++;
+                    }
+                    if (board[k][i] == "W") {
+                        break;
+                    }
+                    if (board[k][i] == "-") {
+                        count = 0;
+                        break;
+                    }
+                }
+                if (count != 0) {
+                    for (int i = m; i > m - count-1 ; i--) {
+                        board[k][i] = "W";
+                    }
+                }
+            }
+            this.print();
+        }
+        return count;
 
+    }
+    public int downSearch(int k,int m,String player)
+    {
+        int count=0;
+        if(player=="First"){
+            if(board[k][m]=="-") {
+                for (int i = k + 1; i < 9; i++) {
+                    if (board[i][m] == "W") {
+                        count++;
+                    }
+                    if (board[i][m] == "B") {
+                        break;
+                    }
 
+                    if (board[i][m] == "-") {
+                        count = 0;
+                        break;
+                    }
+                }
+                if (count != 0) {
+                    for (int i = k; i < k + count+1 ; i++) {
+                        board[i][m] = "B";
+                    }
+                }
+            }
+            this.print();
+        }else if(player=="Second"){
+            if(board[k][m]=="-") {
+                for (int i = k + 1; i < 9; i++) {
+                    if (board[k][i] == "B") {
+                        count++;
+                    }
+                    if (board[k][i] == "W") {
+                        break;
+                    }
+                    if (board[k][i] == "-") {
+                        count = 0;
+                        break;
+                    }
+                }
+                if (count != 0) {
+                    for (int i = k; i < k + count+1 ; i++) {
+                        board[k][i] = "W";
+                    }
+                }
+            }
+            this.print();
+        }
+        return count;
 
+    }
+    public int topSearch(int k,int m,String player)
+    {
+        int count=0;
+        if(player=="First"){
+            if(board[k][m]=="-") {
+                for (int i = k - 1; i >0 ; i--) {
+                    if (board[i][m] == "W") {
+                        count++;
+                    }
+                    if (board[i][m] == "B") {
+                        break;
+                    }
+
+                    if (board[i][m] == "-") {
+                        count = 0;
+                        break;
+                    }
+                }
+                if (count != 0) {
+                    for (int i = k; i > k - count-1 ; i--) {
+                        board[i][m] = "B";
+                    }
+                }
+            }
+            this.print();
+        }else if(player=="Second"){
+            if(board[k][m]=="-") {
+                for (int i = k - 1; i > 0; i--) {
+                    if (board[k][i] == "B") {
+                        count++;
+                    }
+                    if (board[k][i] == "W") {
+                        break;
+                    }
+                    if (board[k][i] == "-") {
+                        count = 0;
+                        break;
+                    }
+                }
+                if (count != 0) {
+                    for (int i = k; i > k - count-1 ; i--) {
+                        board[k][i] = "W";
+                    }
+                }
+            }
+            this.print();
+        }
+        return count;
+
+    }
+    public int downRightSearch(int k,int m,String player)
+    {
+        int count=0;
+        if(player=="First"){
+            if(board[k][m]=="-") {
+                for (int i = m + 1,j=k+1; i < 9||j<9; i++,j++) {
+                    if (board[j][i] == "W") {
+                        count++;
+                    }
+                    if (board[j][i] == "B") {
+                        break;
+                    }
+
+                    if (board[j][i] == "-") {
+                        count = 0;
+                        break;
+                    }
+                }
+                if (count != 0) {
+                    for (int i = m,j=k; i < m + count+1||j<k+count+1 ; i++,j++) {
+                        board[j][i] = "B";
+                    }
+                }
+            }
+            this.print();
+        }else if(player=="Second"){
+            if(board[k][m]=="-") {
+                for (int i = m + 1,j=k+1; i < 9||j<9; i++,j++) {
+                    if (board[j][i] == "B") {
+                        count++;
+                    }
+                    if (board[j][i] == "W") {
+                        break;
+                    }
+                    if (board[j][i] == "-") {
+                        count = 0;
+                        break;
+                    }
+                }
+                if (count != 0) {
+                    for (int i = m,j=k; i < m + count+1||j<count+k+1 ; i++,j++) {
+                        board[j][i] = "W";
+                    }
+                }
+            }
+            this.print();
         }
         return count;
 
@@ -226,40 +444,46 @@ public class Board {
                 boolean rightBorder=false;
                 boolean topBorder=false;
                 boolean bottomBorder=false;
-                int i=-1;
-                int j=Integer.parseInt(sPart);
+                int j=-1;
+                int i=Integer.parseInt(sPart);
                 switch (fPart)
                 {
                     case"A":
-                    i=1;
+                    j=1;
                     break;
                     case"B":
-                        i=2;
+                        j=2;
                         break;
                     case"C":
-                        i=3;
+                        j=3;
                         break;
                     case"D":
-                        i=4;
+                        j=4;
                         break;
                     case"E":
-                        i=5;
+                        j=5;
                         break;
                     case"F":
-                        i=6;
+                        j=6;
                         break;
                     case"G":
-                        i=7;
+                        j=7;
                         break;
                     case"H":
-                        i=8;
+                        j=8;
                         break;
                 }
                 System.out.printf(i+" "+j);
                 System.out.println();
 
                 this.rightSearch(i,j,"First");
+                this.leftSearch(i,j,"First");
+                this.downSearch(i,j,"First");
+                this.topSearch(i,j,"First");
+                this.downRightSearch(i,j,"First");
+
                 invalidMove=false;
+
 
 
 
