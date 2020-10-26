@@ -81,6 +81,59 @@ public class Board {
 
 
     }
+
+    public void startGame(){
+        int i=0;
+        while (true){
+
+
+            if (i%2==0){
+                Move a=new Move(this.board,"First");
+                if(a.exists()) {
+                    System.out.println(this.firstPlayerMessage());
+                    this.play("First");
+
+                }else{
+                    System.out.println("First player has no moves");
+                }
+            }
+            else {
+                Move b=new Move(this.board,"Second");
+                if(b.exists()) {
+                    System.out.println(this.secondPlayerMessage());
+                    this.play("Second");
+
+                }else{
+                    System.out.println("Second player has no moves");
+                }
+
+
+
+            }
+            i++;
+            Move c=new Move(board,"First");
+            Move d=new Move(board,"Second");
+            if(!c.exists()&&!d.exists()){
+                int oPieces=this.getPiecesCount("First");
+                int xPieces=this.getPiecesCount("Second");
+                System.out.println("Game over");
+                if(oPieces>xPieces){
+                    System.out.println("First player victory");
+                }else if(oPieces<xPieces){
+                    System.out.println("Second player victory");
+                }else{
+                    System.out.println("Draw");
+                }
+                break;
+            }
+
+        }
+
+
+
+
+    }
+
     public int getPiecesCount(String player){
         int count=0;
         for(int i=1;i<9;i++){
@@ -96,11 +149,11 @@ public class Board {
     }
     public String firstPlayerMessage()
     {
-        return "Black player turn";
+        return "First player turn (O Pieces)";
     }
     public String secondPlayerMessage()
     {
-        return "White player turn";
+        return "Second player turn(X Pieces)";
     }
     public int rightSearch(int k,int m,String player)
     {
@@ -781,21 +834,8 @@ public class Board {
 
     public static void main(String args[]){
         Board a=new Board();
+        a.startGame();
 
-        int i=0;
-        while (true){
-            if (i%2==0){
-                System.out.println(a.firstPlayerMessage());
-                a.play("First");
-
-            }
-            else {
-                System.out.println(a.secondPlayerMessage());
-                a.play("Second");
-
-            }
-           i++;
-        }
     }
 
 }
