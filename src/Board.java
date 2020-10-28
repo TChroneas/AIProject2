@@ -91,6 +91,8 @@ public class Board {
                 Move a=new Move(this.board,"First");
                 if(a.exists()) {
                     System.out.println(this.firstPlayerMessage());
+                    a.printMoves();
+                    System.out.println();
                     this.play("First");
 
                 }else{
@@ -100,6 +102,8 @@ public class Board {
             else {
                 Move b=new Move(this.board,"Second");
                 if(b.exists()) {
+                    b.printMoves();
+                    System.out.println();
                     System.out.println(this.secondPlayerMessage());
                     this.play("Second");
 
@@ -825,9 +829,9 @@ public class Board {
             }
             if(invalidMove){
                 System.out.println("Move not legal,try again");
-            }else{
-                piecesCount--;
             }
+
+
         }while (invalidInput||invalidMove);
     }
 
