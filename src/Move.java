@@ -7,13 +7,11 @@ public class Move {
     String player;
     ArrayList<String> moves=new ArrayList<>();
     int row,column=-1;
-
     public Move(String[][] board, String player) {
         this.board = board;
         this.player = player;
         moves.clear();
     }
-
     public void printMoves(){
         moves = new ArrayList<String>(new LinkedHashSet<String>(moves));
         System.out.print("Available moves: ");
@@ -51,7 +49,6 @@ public class Move {
         }
         moves.add(move);
     }
-
     public boolean topRightCheck(){
         boolean check=false;
         for(int i=1;i<9;i++){
@@ -287,7 +284,6 @@ public class Move {
         return check;
 
     }
-
     public boolean downCheck(){
         boolean check=false;
         for(int i=1;i<9;i++){
@@ -335,7 +331,6 @@ public class Move {
         return check;
 
     }
-
     public boolean leftCheck(){
         boolean check=false;
         for(int i=1;i<9;i++){
@@ -430,7 +425,6 @@ public class Move {
         return check;
 
     }
-
     public boolean exists(){
         boolean firstCheck=upCheck();
         boolean secondCheck=downCheck();
@@ -441,6 +435,17 @@ public class Move {
         boolean seventhCheck=topLeftCheck();
         boolean eighthCheck=topRightCheck();
         return (firstCheck||secondCheck||thirdCheck||fourthCheck||fifthCheck||sixthCheck||seventhCheck||eighthCheck);
+    }
+    public void generateMoves(){
+        upCheck();
+        downRightCheck();
+        downLeftCheck();
+        downCheck();
+        topRightCheck();
+        topLeftCheck();
+        rightCheck();
+        leftCheck();
+        moves = new ArrayList<String>(new LinkedHashSet<String>(moves));
     }
 
 

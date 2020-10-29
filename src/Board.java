@@ -1,11 +1,11 @@
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-public class Board {
+public class Board implements Cloneable {
     public String[][] board = new String[9][9];
-    int piecesCount=60;
-
-
     public void print()
     {
         for(int i=0;i<9;i++)
@@ -18,6 +18,15 @@ public class Board {
             System.out.println(" ");
         }
     }
+
+    public Board(Board newBoard) {
+        for(int i=0;i<9;i++){
+            for(int j=0;j<9;j++){
+                this.board[i][j]=newBoard.board[i][j];
+            }
+        }
+    }
+
     public Board()
     {
         for (int i = 0; i < 9; i++) {
@@ -80,9 +89,78 @@ public class Board {
 
 
 
+
+
+
+
     }
 
-    public void startGame(){
+
+    public void startAIGame() throws CloneNotSupportedException {
+        int i=0;
+        while (true){
+
+
+            if (i%2==0){
+                Move a=new Move(this.board,"First");
+                if(a.exists()) {
+                    System.out.println(this.firstPlayerMessage());
+                    a.printMoves();
+                    System.out.println();
+                    this.play("First");
+                    this.print();
+
+                }else{
+                    System.out.println("First player has no moves");
+                }
+            }
+            else {
+                Move b=new Move(this.board,"Second");
+                if(b.exists()) {
+                    b.printMoves();
+                    System.out.println();
+                    System.out.println(this.secondPlayerMessage());
+                    Minimax m=new Minimax(this,"Second");
+                    this.board=m.miniiimax(3,false,m.board).board;
+
+
+                }else{
+                    System.out.println("Second player has no moves");
+                }
+
+
+
+            }
+            i++;
+            Move c=new Move(board,"First");
+            Move d=new Move(board,"Second");
+            if(!c.exists()&&!d.exists()){
+                int oPieces=this.getPiecesCount("First");
+                int xPieces=this.getPiecesCount("Second");
+                System.out.println("Game over");
+                if(oPieces>xPieces){
+                    System.out.println("First player victory");
+                }else if(oPieces<xPieces){
+                    System.out.println("Second player victory");
+                }else{
+                    System.out.println("Draw");
+                }
+                System.out.println("Final board:");
+                this.print();
+                System.out.println("Final score:");
+                System.out.println("Black:"+this.getPiecesCount("First")+",White:"+this.getPiecesCount("Second"));
+                break;
+            }
+
+        }
+
+
+
+
+    }
+
+    public void startGame()
+    {
         int i=0;
         while (true){
 
@@ -128,6 +206,10 @@ public class Board {
                 }else{
                     System.out.println("Draw");
                 }
+                System.out.println("Final board:");
+                this.print();
+                System.out.println("Final score:");
+                System.out.println("Black:"+this.getPiecesCount("First")+",White:"+this.getPiecesCount("Second"));
                 break;
             }
 
@@ -137,8 +219,28 @@ public class Board {
 
 
     }
+    public int startValue(boolean maxim){
+        if(maxim){
+            return Integer.MIN_VALUE;
 
-    public int getPiecesCount(String player){
+        }else{
+            return Integer.MAX_VALUE;
+        }
+    }
+    public int evaluate(String player){
+        int piecesPoints=0;
+        int cornerPoints=0;
+        int movesPoints;
+        if(player=="First"){
+          return this.getPiecesCount("First")-this.getPiecesCount("Second");
+
+        }else{
+          return this.getPiecesCount("Second")-this.getPiecesCount("First");
+        }
+
+    }
+    public int getPiecesCount(String player)
+    {
         int count=0;
         for(int i=1;i<9;i++){
             for (int j=1;j<9;j++){
@@ -152,6 +254,7 @@ public class Board {
         return count;
     }
     public String firstPlayerMessage()
+
     {
         return "First player turn (O Pieces)";
     }
@@ -634,6 +737,82 @@ public class Board {
         return count;
 
     }
+    public void aiTest(String move,String player){
+
+        String firstPart = String.valueOf(move.charAt(0));
+        String secondPart = String.valueOf(move.charAt(1));
+        int i=Integer.parseInt(secondPart);
+        int j=-1;
+        switch (firstPart)
+        {
+            case"A":
+                j=1;
+                break;
+            case"B":
+                j=2;
+                break;
+            case"C":
+                j=3;
+                break;
+            case"D":
+                j=4;
+                break;
+            case"E":
+                j=5;
+                break;
+            case"F":
+                j=6;
+                break;
+            case"G":
+                j=7;
+                break;
+            case"H":
+                j=8;
+                break;
+        }
+        try {
+            this.rightSearch(i, j, player);
+        } catch (ArrayIndexOutOfBoundsException e) {
+
+        }
+        try {
+             this.topRightSearch(i, j, player);
+        } catch (ArrayIndexOutOfBoundsException e) {
+
+        }
+        try {
+            this.topSearch(i, j, player);
+        } catch (ArrayIndexOutOfBoundsException e) {
+
+        }
+        try {
+           this.topLeftSearch(i, j, player);
+        } catch (ArrayIndexOutOfBoundsException e) {
+
+        }
+        try {
+           this.leftSearch(i, j, player);
+        } catch (ArrayIndexOutOfBoundsException e) {
+
+        }
+        try {
+           this.downLeftSearch(i, j, player);
+        } catch (ArrayIndexOutOfBoundsException e) {
+
+        }
+        try {
+            this.downSearch(i, j, player);
+        } catch (ArrayIndexOutOfBoundsException e) {
+
+        }
+        try {
+            this.downRightSearch(i, j, player);
+        } catch (ArrayIndexOutOfBoundsException e) {
+
+        }
+
+
+    }
     public void play(String player)
     {
         String fPart="";
@@ -835,10 +1014,14 @@ public class Board {
         }while (invalidInput||invalidMove);
     }
 
+    public Object clone()throws CloneNotSupportedException{
+        return super.clone();
+    }
 
-    public static void main(String args[]){
+
+    public static void main(String args[]) throws CloneNotSupportedException {
         Board a=new Board();
-        a.startGame();
+        a.startAIGame();
 
     }
 
