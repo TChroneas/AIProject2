@@ -121,15 +121,12 @@ public class Board implements Cloneable {
                     System.out.println();
                     System.out.println(this.secondPlayerMessage());
                     Minimax m=new Minimax(this,"Second");
-                    this.board=m.miniiimax(3,false,m.board).board;
+                    this.board=m.miniiimax(10,false,m.board,Integer.MIN_VALUE,Integer.MAX_VALUE).board;
 
 
                 }else{
                     System.out.println("Second player has no moves");
                 }
-
-
-
             }
             i++;
             Move c=new Move(board,"First");
@@ -153,10 +150,6 @@ public class Board implements Cloneable {
             }
 
         }
-
-
-
-
     }
 
     public void startGame()
@@ -228,14 +221,96 @@ public class Board implements Cloneable {
         }
     }
     public int evaluate(String player){
-        int piecesPoints=0;
+        int piecesPoints=15;
         int cornerPoints=0;
-        int movesPoints;
+        int movesPoints=-10;
+        int nextToCornerPoints=-40;
+        boolean check=false;
+        boolean check2=false;
+        boolean check3=false;
+        boolean check4=false;
         if(player=="First"){
-          return this.getPiecesCount("First")-this.getPiecesCount("Second");
+            int count=this.getPiecesCount("First")-this.getPiecesCount("Second");
+            piecesPoints=piecesPoints*count;
+            Move a=new Move(this.board,"Second");
+            a.generateMoves();
+            movesPoints=movesPoints*a.moves.size();
+            if(board[1][1]=="O"){
+                check=true;
+                cornerPoints=cornerPoints+50;
+            }
+            if(board[1][8]=="O"){
+                check2=true;
+                cornerPoints=cornerPoints+50;
+            }
+            if(board[8][1]=="O"){
+                check3=true;
+                cornerPoints=cornerPoints+50;
+            }
+            if(board[8][8]=="O"){
+                check4=true;
+                cornerPoints=cornerPoints+50;
+            }
+            if(board[1][2]=="O"&&!check){
+                nextToCornerPoints=nextToCornerPoints-40;
+
+            }
+            if(board[1][7]=="O"&&!check2){
+                nextToCornerPoints=nextToCornerPoints-40;
+
+            }
+            if(board[8][2]=="O"&&!check3){
+                nextToCornerPoints=nextToCornerPoints-40;
+
+            }
+            if(board[8][7]=="O"&&!check4){
+                nextToCornerPoints=nextToCornerPoints-40;
+
+            }
+            return piecesPoints+nextToCornerPoints+cornerPoints+movesPoints;
 
         }else{
-          return this.getPiecesCount("Second")-this.getPiecesCount("First");
+            int count=this.getPiecesCount("Second")-this.getPiecesCount("First");
+            piecesPoints=piecesPoints*count;
+            Move a=new Move(this.board,"Second");
+            a.generateMoves();
+            movesPoints=movesPoints*a.moves.size();
+            if(board[1][1]=="O"){
+                check=true;
+                cornerPoints=cornerPoints+50;
+            }
+            if(board[1][8]=="O"){
+                check2=true;
+                cornerPoints=cornerPoints+50;
+            }
+            if(board[8][1]=="O"){
+                check3=true;
+                cornerPoints=cornerPoints+50;
+            }
+            if(board[8][8]=="O"){
+                check4=true;
+                cornerPoints=cornerPoints+50;
+            }
+            if(board[1][2]=="O"&&!check){
+                nextToCornerPoints=nextToCornerPoints-40;
+
+            }
+            if(board[1][7]=="O"&&!check2){
+                nextToCornerPoints=nextToCornerPoints-40;
+
+            }
+            if(board[8][2]=="O"&&!check3){
+                nextToCornerPoints=nextToCornerPoints-40;
+
+            }
+            if(board[8][7]=="O"&&!check4){
+                nextToCornerPoints=nextToCornerPoints-40;
+
+            }
+            return -1*(piecesPoints+nextToCornerPoints+cornerPoints+movesPoints);
+
+
+
         }
 
     }
