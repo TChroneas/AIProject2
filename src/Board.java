@@ -272,7 +272,7 @@ public class Board implements Cloneable {
         }else{
             int count=this.getPiecesCount("Second")-this.getPiecesCount("First");
             piecesPoints=piecesPoints*count;
-            Move a=new Move(this.board,"Second");
+            Move a=new Move(this.board,"First");
             a.generateMoves();
             movesPoints=movesPoints*a.moves.size();
             if(board[1][1]=="O"){
