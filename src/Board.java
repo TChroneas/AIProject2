@@ -96,58 +96,115 @@ public class Board implements Cloneable {
     }
 
 
-    public void startAIGame() throws CloneNotSupportedException {
+    public void startAIGame(int depth,int turn) throws CloneNotSupportedException {
         int i=0;
-        while (true){
+
+        if(turn==1) {
+            while (true) {
 
 
-            if (i%2==0){
-                Move a=new Move(this.board,"First");
-                if(a.exists()) {
-                    System.out.println(this.firstPlayerMessage());
-                    a.printMoves();
-                    System.out.println();
-                    this.play("First");
+                if (i % 2 == 0) {
+                    Move a = new Move(this.board, "First");
+                    if (a.exists()) {
+                        System.out.println(this.firstPlayerMessage());
+                        a.printMoves();
+                        System.out.println();
+                        this.play("First");
+                        this.print();
+
+                    } else {
+                        System.out.println("First player has no moves");
+                    }
+                } else {
+                    Move b = new Move(this.board, "Second");
+                    if (b.exists()) {
+                        b.printMoves();
+                        System.out.println();
+                        System.out.println(this.secondPlayerMessage());
+                        Minimax m = new Minimax(this, "Second");
+                        this.board = m.miniiimax(depth, false, m.board, Integer.MIN_VALUE, Integer.MAX_VALUE).board;
+
+
+                    } else {
+                        System.out.println("Second player has no moves");
+                    }
+                }
+                i++;
+                Move c = new Move(board, "First");
+                Move d = new Move(board, "Second");
+                if (!c.exists() && !d.exists()) {
+                    int oPieces = this.getPiecesCount("First");
+                    int xPieces = this.getPiecesCount("Second");
+                    System.out.println("Game over");
+                    if (oPieces > xPieces) {
+                        System.out.println("First player victory");
+                    } else if (oPieces < xPieces) {
+                        System.out.println("Second player victory");
+                    } else {
+                        System.out.println("Draw");
+                    }
+                    System.out.println("Final board:");
                     this.print();
-
-                }else{
-                    System.out.println("First player has no moves");
+                    System.out.println("Final score:");
+                    System.out.println("Black:" + this.getPiecesCount("First") + ",White:" + this.getPiecesCount("Second"));
+                    break;
                 }
+
             }
-            else {
-                Move b=new Move(this.board,"Second");
-                if(b.exists()) {
-                    b.printMoves();
-                    System.out.println();
-                    System.out.println(this.secondPlayerMessage());
-                    Minimax m=new Minimax(this,"Second");
-                    this.board=m.miniiimax(10,false,m.board,Integer.MIN_VALUE,Integer.MAX_VALUE).board;
+        }else{
+            while (true) {
 
 
-                }else{
-                    System.out.println("Second player has no moves");
+                if (i % 2 == 0) {
+
+                    Move a = new Move(this.board, "First");
+                    if (a.exists()) {
+                        System.out.println(this.firstPlayerMessage());
+                        a.printMoves();
+                        System.out.println();
+                        this.print();
+                        Minimax m=new Minimax(this,"First");
+                        this.board=m.miniiimax(depth,true, m.board,Integer.MIN_VALUE,Integer.MAX_VALUE).board;
+
+                    } else {
+                        System.out.println("First player has no moves");
+                    }
+                } else {
+                    Move b = new Move(this.board, "Second");
+                    if (b.exists()) {
+                        b.printMoves();
+                        System.out.println();
+                        System.out.println(this.secondPlayerMessage());
+                        this.play("Second");
+
+
+                    } else {
+                        System.out.println("Second player has no moves");
+                    }
                 }
-            }
-            i++;
-            Move c=new Move(board,"First");
-            Move d=new Move(board,"Second");
-            if(!c.exists()&&!d.exists()){
-                int oPieces=this.getPiecesCount("First");
-                int xPieces=this.getPiecesCount("Second");
-                System.out.println("Game over");
-                if(oPieces>xPieces){
-                    System.out.println("First player victory");
-                }else if(oPieces<xPieces){
-                    System.out.println("Second player victory");
-                }else{
-                    System.out.println("Draw");
+                i++;
+                Move c = new Move(board, "First");
+                Move d = new Move(board, "Second");
+                if (!c.exists() && !d.exists()) {
+                    int oPieces = this.getPiecesCount("First");
+                    int xPieces = this.getPiecesCount("Second");
+                    System.out.println("Game over");
+                    if (oPieces > xPieces) {
+                        System.out.println("First player victory");
+                    } else if (oPieces < xPieces) {
+                        System.out.println("Second player victory");
+                    } else {
+                        System.out.println("Draw");
+                    }
+                    System.out.println("Final board:");
+                    this.print();
+                    System.out.println("Final score:");
+                    System.out.println("Black:" + this.getPiecesCount("First") + ",White:" + this.getPiecesCount("Second"));
+                    break;
                 }
-                System.out.println("Final board:");
-                this.print();
-                System.out.println("Final score:");
-                System.out.println("Black:"+this.getPiecesCount("First")+",White:"+this.getPiecesCount("Second"));
-                break;
+
             }
+
 
         }
     }
@@ -211,14 +268,6 @@ public class Board implements Cloneable {
 
 
 
-    }
-    public int startValue(boolean maxim){
-        if(maxim){
-            return Integer.MIN_VALUE;
-
-        }else{
-            return Integer.MAX_VALUE;
-        }
     }
     public int evaluate(String player){
         int piecesPoints=15;
@@ -1089,14 +1138,46 @@ public class Board implements Cloneable {
         }while (invalidInput||invalidMove);
     }
 
-    public Object clone()throws CloneNotSupportedException{
-        return super.clone();
-    }
+
 
 
     public static void main(String args[]) throws CloneNotSupportedException {
+
+        System.out.println("Choose if you want to play versus another human or a computer(write 1 for human,anything else for computer)");
+        Scanner input = new Scanner(System.in);
+        String mode=input.nextLine();
         Board a=new Board();
-        a.startAIGame();
+        int depth=0;
+        if(mode.equals("1")){
+            a.startGame();
+        }else{
+            System.out.println("Choose if you want to go first or second(write 1 for first , anything else for second)");
+            Scanner scan = new Scanner(System.in);
+            String turn=scan.nextLine();
+            boolean check=false;
+            do{
+                System.out.println("Choose AI depth(recommended depth=3-10)");
+                Scanner scen = new Scanner(System.in);
+                String dep=scan.nextLine();
+                try{
+                     depth=Integer.valueOf(dep);
+                    check=true;
+                }catch (Exception e){
+                    continue;
+                }
+
+
+            }while (!check);
+             if(turn.equals("1")){
+                 a.startAIGame(depth,1);
+             }else{
+                 a.startAIGame(depth,2);
+             }
+
+
+
+        }
+
 
     }
 
