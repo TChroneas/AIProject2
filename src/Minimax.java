@@ -51,10 +51,10 @@ public class Minimax {
             Board maxBoard=boards.get(0);
             for (Board child:boards){
                 Board max=miniiimax(depth-1,false,child,q,w);
-                if(max.evaluate("First")>maxBoard.evaluate("First")){
+                if(max.evaluate()>maxBoard.evaluate()){
                     maxBoard=child;
                 }
-                q = Integer.max(w, max.evaluate("Second"));
+                q = Integer.max(q, max.evaluate());
                 if(w <= q)
                 {
                     break;
@@ -65,10 +65,10 @@ public class Minimax {
             Board minBoard=boards.get(0);
             for (Board child:boards){
                 Board min=miniiimax(depth-1,true,child,q,w);
-                if(min.evaluate("Second")<minBoard.evaluate("Second")){
+                if(min.evaluate()<minBoard.evaluate()){
                     minBoard=child;
                 }
-                w = Integer.min(w, min.evaluate("First"));
+                w = Integer.min(w, min.evaluate());
                 if(w <= q)
                 {
                     break;

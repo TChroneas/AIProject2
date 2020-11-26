@@ -77,14 +77,7 @@ public class Board implements Cloneable {
         board[4][5]="X";
         board[5][4]="X";
         board[5][5]="O";
-       /* board[1][2]="X";
-        board[1][2]="X";
-        board[1][3]="X";
-        board[1][4]="X";
-        board[1][5]="X";
-        board[1][6]="X";
-        board[1][7]="X";
-        board[1][1]="X";*/
+
 
 
 
@@ -269,100 +262,229 @@ public class Board implements Cloneable {
 
 
     }
-    public int evaluate(String player){
-        int piecesPoints=15;
-        int cornerPoints=0;
-        int movesPoints=-10;
-        int nextToCornerPoints=-40;
-        boolean check=false;
-        boolean check2=false;
-        boolean check3=false;
-        boolean check4=false;
-        if(player=="First"){
-            int count=this.getPiecesCount("First")-this.getPiecesCount("Second");
-            piecesPoints=piecesPoints*count;
-            Move a=new Move(this.board,"Second");
-            a.generateMoves();
-            movesPoints=movesPoints*a.moves.size();
-            if(board[1][1]=="O"){
-                check=true;
-                cornerPoints=cornerPoints+50;
-            }
-            if(board[1][8]=="O"){
-                check2=true;
-                cornerPoints=cornerPoints+50;
-            }
-            if(board[8][1]=="O"){
-                check3=true;
-                cornerPoints=cornerPoints+50;
-            }
-            if(board[8][8]=="O"){
-                check4=true;
-                cornerPoints=cornerPoints+50;
-            }
-            if(board[1][2]=="O"&&!check){
-                nextToCornerPoints=nextToCornerPoints-40;
 
-            }
-            if(board[1][7]=="O"&&!check2){
-                nextToCornerPoints=nextToCornerPoints-40;
+    public int evaluate(){
+        int positionalPoints=0;
+        int mobilityPoints=0;
+        int blackCorners=0;
+        int whiteCorners=0;
+        int blackMoves;
+        int whiteMoves;
+        int absolutePoints=0;
+        int valueBoard[][]={
+                {0,0,0,0,0,0,0,0,0},
+                {0,100, -20, 10, 5,  5, 10, -20, 100},
+                {0,-20, -50, -2, -2,  -2, -2, -50, -20},
+                {0,10, -2, -1, -1, -1, -1, -2, 10},
+                {0, 5, -2, -1, -1, -1, -1, -2,  5},
+                {0, 5, -2, -1, -1, -1, -1, -2,  5},
+                {0,10, -2, -1, -1, -1, -1, -2, 10},
+                {0,-20, -50, -2, -2,  -2, -2, -50, -20},
+                {0,100, -20, 10, 5,  5, 10, -20, 100}
+        };
 
+        for(int i=1;i<9;i++){
+            for(int j=1;j<9;j++){
+                if(board[i][j]=="O"){
+                    positionalPoints=positionalPoints+valueBoard[i][j];
+                }else if(board[i][j]=="X"){
+                    positionalPoints=positionalPoints-valueBoard[i][j];
+                }
             }
-            if(board[8][2]=="O"&&!check3){
-                nextToCornerPoints=nextToCornerPoints-40;
-
-            }
-            if(board[8][7]=="O"&&!check4){
-                nextToCornerPoints=nextToCornerPoints-40;
-
-            }
-            return piecesPoints+nextToCornerPoints+cornerPoints+movesPoints;
-
-        }else{
-            int count=this.getPiecesCount("Second")-this.getPiecesCount("First");
-            piecesPoints=piecesPoints*count;
-            Move a=new Move(this.board,"First");
-            a.generateMoves();
-            movesPoints=movesPoints*a.moves.size();
-            if(board[1][1]=="O"){
-                check=true;
-                cornerPoints=cornerPoints+50;
-            }
-            if(board[1][8]=="O"){
-                check2=true;
-                cornerPoints=cornerPoints+50;
-            }
-            if(board[8][1]=="O"){
-                check3=true;
-                cornerPoints=cornerPoints+50;
-            }
-            if(board[8][8]=="O"){
-                check4=true;
-                cornerPoints=cornerPoints+50;
-            }
-            if(board[1][2]=="O"&&!check){
-                nextToCornerPoints=nextToCornerPoints-40;
-
-            }
-            if(board[1][7]=="O"&&!check2){
-                nextToCornerPoints=nextToCornerPoints-40;
-
-            }
-            if(board[8][2]=="O"&&!check3){
-                nextToCornerPoints=nextToCornerPoints-40;
-
-            }
-            if(board[8][7]=="O"&&!check4){
-                nextToCornerPoints=nextToCornerPoints-40;
-
-            }
-            return -1*(piecesPoints+nextToCornerPoints+cornerPoints+movesPoints);
-
-
-
+        }
+        if(board[1][1]=="O"){
+            blackCorners++;
+        }
+        if(board[8][1]=="O"){
+            blackCorners++;
+        }
+        if(board[1][8]=="O"){
+            blackCorners++;
+        }
+        if(board[8][8]=="O"){
+            blackCorners++;
+        }
+        if(board[1][1]=="X"){
+            whiteCorners++;
+        }
+        if(board[1][8]=="X"){
+            whiteCorners++;
+        }
+        if(board[8][1]=="X"){
+            whiteCorners++;
+        }
+        if(board[8][8]=="X"){
+            whiteCorners++;
         }
 
+        Move a=new Move(this.board,"First");
+        Move b=new Move(this.board,"Second");
+        a.generateMoves();
+        b.generateMoves();
+        blackMoves=a.moves.size();
+        whiteMoves=b.moves.size();
+
+            mobilityPoints=10*(blackCorners-whiteCorners);
+
+
+        absolutePoints=this.getPiecesCount("First")-this.getPiecesCount("Second");
+
+
+        if(this.getPiecesCount("First")+this.getPiecesCount("Second")<45){
+            return positionalPoints+mobilityPoints;
+        }else{
+            return absolutePoints;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
+//    public int evaluate(String player){
+//        int piecesPoints=15;
+//        int cornerPoints=0;
+//        int movesPoints=-10;
+//        int nextToCornerPoints=0;
+//        int sidePoints=0;
+//        boolean check=false;
+//        boolean check2=false;
+//        boolean check3=false;
+//        boolean check4=false;
+//        String s1 = null;
+//        String s2=null;
+//        String s3=null;
+//        String s4=null;
+//        for(int i=1;i <9;i++){
+//            s1=s1+board[1][i];
+//            s2=s2+board[8][i];
+//            s3=s3+board[i][1];
+//            s4=s4+board[i][8];
+//
+//
+//
+//        }
+//        if(player=="First"){
+//            int count=this.getPiecesCount("First")-this.getPiecesCount("Second");
+//            piecesPoints=piecesPoints*count;
+//            Move a=new Move(this.board,"Second");
+//            a.generateMoves();
+//            movesPoints=movesPoints*a.moves.size();
+//            if(s1=="OOOOOOOO"){
+//                sidePoints=sidePoints+55;
+//            }
+//            if(s2=="OOOOOOOO"){
+//                sidePoints=sidePoints+55;
+//            }
+//            if(s3=="OOOOOOOO"){
+//                sidePoints=sidePoints+55;
+//            }
+//            if(s4=="OOOOOOOO"){
+//                sidePoints=sidePoints+50;
+//            }
+//
+//
+//            if(board[1][1]=="O"){
+//                check=true;
+//                cornerPoints=cornerPoints+50;
+//            }
+//            if(board[1][8]=="O"){
+//                check2=true;
+//                cornerPoints=cornerPoints+50;
+//            }
+//            if(board[8][1]=="O"){
+//                check3=true;
+//                cornerPoints=cornerPoints+50;
+//            }
+//            if(board[8][8]=="O"){
+//                check4=true;
+//                cornerPoints=cornerPoints+50;
+//            }
+//            if(board[1][2]=="O"&&!check){
+//                nextToCornerPoints=nextToCornerPoints-40;
+//
+//            }
+//            if(board[1][7]=="O"&&!check2){
+//                nextToCornerPoints=nextToCornerPoints-40;
+//
+//            }
+//            if(board[8][2]=="O"&&!check3){
+//                nextToCornerPoints=nextToCornerPoints-40;
+//
+//            }
+//            if(board[8][7]=="O"&&!check4){
+//                nextToCornerPoints=nextToCornerPoints-40;
+//
+//            }
+//            return piecesPoints+nextToCornerPoints+cornerPoints+movesPoints+sidePoints;
+//
+//        }else{
+//            int count=this.getPiecesCount("Second")-this.getPiecesCount("First");
+//            piecesPoints=piecesPoints*count;
+//            Move a=new Move(this.board,"First");
+//            a.generateMoves();
+//            movesPoints=movesPoints*a.moves.size();
+//
+//            if(s1=="XXXXXXXX"){
+//                sidePoints=sidePoints+55;
+//            }
+//            if(s2=="XXXXXXXX"){
+//                sidePoints=sidePoints+55;
+//            }
+//            if(s3=="XXXXXXXX"){
+//                sidePoints=sidePoints+55;
+//            }
+//            if(s4=="XXXXXXXX"){
+//                sidePoints=sidePoints+50;
+//            }
+//
+//            if(board[1][1]=="O"){
+//                check=true;
+//                cornerPoints=cornerPoints+50;
+//            }
+//            if(board[1][8]=="O"){
+//                check2=true;
+//                cornerPoints=cornerPoints+50;
+//            }
+//            if(board[8][1]=="O"){
+//                check3=true;
+//                cornerPoints=cornerPoints+50;
+//            }
+//            if(board[8][8]=="O"){
+//                check4=true;
+//                cornerPoints=cornerPoints+50;
+//            }
+//            if(board[1][2]=="O"&&!check){
+//                nextToCornerPoints=nextToCornerPoints-40;
+//
+//            }
+//            if(board[1][7]=="O"&&!check2){
+//                nextToCornerPoints=nextToCornerPoints-40;
+//
+//            }
+//            if(board[8][2]=="O"&&!check3){
+//                nextToCornerPoints=nextToCornerPoints-40;
+//
+//            }
+//            if(board[8][7]=="O"&&!check4){
+//                nextToCornerPoints=nextToCornerPoints-40;
+//
+//            }
+//            return -1*(piecesPoints+nextToCornerPoints+cornerPoints+movesPoints+sidePoints);
+//
+//
+//
+//        }
+//
+//    }
     public int getPiecesCount(String player)
     {
         int count=0;
